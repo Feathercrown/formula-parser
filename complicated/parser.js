@@ -1,5 +1,3 @@
-let fs = require('fs');
-
 class Parser {
 
     constructor(){}
