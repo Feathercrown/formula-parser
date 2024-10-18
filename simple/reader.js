@@ -1,7 +1,7 @@
 class Reader {
 
     line = 0;
-    col = 0;
+    column = 0;
     index = 0;
     text = '';
 

@@ -18,7 +18,7 @@ class Tokenizer {
         //output token and token type
         let char = this.reader.peek();
         if(char === null){
-            return null;
+            return [null, null]; //TODO: No
         }
 
         //Switch based on token starting character type
@@ -36,16 +36,16 @@ class Tokenizer {
                 process.exit(1);
                 return null;
             default:
-                return this.error();
+                return this.error('Syntax Error', 'Unexpected token starting symbol');
         }
     }
 
-    error(){
+    error(errorType, errorMessage){
         let { line, column } = this.reader.error();
-        return `Error at (${line}, ${column})`;
+        return [errorType, `${errorType}: ${errorMessage} at (${line}, ${column})`];
     }
 
-    getCharType(char){
+    getCharType(char){ //TODO: Add constants? As a list defined with the formula instead of being passed in as a variable? Eg. `2*5+3*FOO; FOO=4`
         if(/\s/.test(char)){
             return 'whitespace';
 
