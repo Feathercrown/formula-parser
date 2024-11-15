@@ -4,7 +4,7 @@ class Tokenizer {
 
     reader = null;
 
-    keywords = ['d'];
+    keywords = ['d', 'kl', 'kh'];
     operators = ['+', '-', '/', '*', '(', ')', '[', ']', '{', '}', ',', '!', '%'];
 
     constructor(text){
@@ -17,13 +17,12 @@ class Tokenizer {
         //read token
         //output token and token type
         let char = this.reader.peek();
-        if(char === null){
-            return [null, null]; //TODO: No
-        }
 
         //Switch based on token starting character type
         //TODO: Add comment tokens?
         switch(this.getCharType(char)){
+            case 'EOF':
+                return [null, null];
             case 'whitespace':
                 return this.readWhitespace();
             case 'number':
@@ -46,7 +45,10 @@ class Tokenizer {
     }
 
     getCharType(char){ //TODO: Add constants? As a list defined with the formula instead of being passed in as a variable? Eg. `2*5+3*FOO; FOO=4`
-        if(/\s/.test(char)){
+        if(char === null){
+            return 'EOF'; //End of File
+
+        } else if(/\s/.test(char)){
             return 'whitespace';
 
         } else if(/[0-9]/.test(char)){
