@@ -8,13 +8,14 @@ parser.display();
 
 let fs = require('fs');
 let { Tokenizer } = require('./tokenizer.js');
+
 let tokenizer = new Tokenizer(fs.readFileSync('./input.txt').toString());
 do {
-    var [errorType, value] = tokenizer.next();
-    if(errorType !== null){ //value = error (TODO: Remove this ambiguity)
-        console.error(value);
-        break;
-    } else { //value = token
-        console.log(value);
+    var { isErr, error, token } = tokenizer.next();
+    if (isErr) {
+        console.error(error);
+        break; //Stop reading tokens
+    } else {
+        console.log(token);
     }
-} while (value !== null);
+} while (token !== null);

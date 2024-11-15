@@ -22,7 +22,10 @@ class Tokenizer {
         //TODO: Add comment tokens?
         switch(this.getCharType(char)){
             case 'EOF':
-                return [null, null];
+                return {
+                    isErr: false,
+                    token: null
+                };
             case 'whitespace':
                 return this.readWhitespace();
             case 'number':
@@ -33,7 +36,7 @@ class Tokenizer {
                 return this.readWord();
             case 'emoji':
                 process.exit(1);
-                return null;
+                return this.error('Syntax Error', 'No emojis allowed');
             default:
                 return this.error('Syntax Error', 'Unexpected token starting symbol');
         }
@@ -41,7 +44,16 @@ class Tokenizer {
 
     error(errorType, errorMessage){
         let { line, column } = this.reader.error();
-        return [errorType, `${errorType}: ${errorMessage} at (${line}, ${column})`];
+        return {
+            isErr: true,
+            error: {
+                display: `${errorType}: ${errorMessage} at (${line}, ${column})`,
+                type: errorType,
+                message: errorMessage,
+                line: line,
+                column: column
+            }
+        }
     }
 
     getCharType(char){ //TODO: Add constants? As a list defined with the formula instead of being passed in as a variable? Eg. `2*5+3*FOO; FOO=4`
@@ -84,17 +96,23 @@ class Tokenizer {
             token += this.reader.next();
             char = this.reader.peek();
         }
-        return [null, {
-            type: 'number',
-            value: token
-        }]; //TODO: Implement check for 3.2.1 so that it throws an error here, not in tokenizer.next()?
+        return {
+            isErr: false,
+            token: {
+                type: 'number',
+                value: token
+            }
+        }; //TODO: Implement check for 3.2.1 so that it throws an error here, not in tokenizer.next()?
     }
 
     readSymbol(){
-        return [null, {
-            type: 'operator',
-            value: this.reader.next()
-        }];
+        return {
+            isErr: false,
+            token: {
+                type: 'operator',
+                value: this.reader.next()
+            }
+        };
     }
 
     readWord(){
@@ -105,15 +123,21 @@ class Tokenizer {
             char = this.reader.peek();
         }
         if(this.keywords.includes(token)){
-            return [null, {
-                type: 'keyword',
-                value: token
-            }];
+            return {
+                isErr: false,
+                token: {
+                    type: 'keyword',
+                    value: token
+                }
+            };
         } else {
-            return [null, {
-                type: 'variable',
-                value: token
-            }];
+            return {
+                isErr: false,
+                token: {
+                    type: 'variable',
+                    value: token
+                }
+            };
         }
     }
 
