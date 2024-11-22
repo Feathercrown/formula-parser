@@ -17,3 +17,6 @@ Error:
     token = undefined,
     error = <err>
 }
+
+## Parser
+https://en.wikipedia.org/wiki/LL_parser#Concrete_example
